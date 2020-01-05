@@ -2,7 +2,16 @@
 const prompt = require("prompt-async");
 // Using axios for github API call
 const axios = require('axios');
+// for file storing
+const fs = require('fs')
+// for pdf converting
+// https://www.npmjs.com/package/electron-html-to
+const convertFactory = require('electron-html-to');
 
+// create variable
+var conversion = convertFactory({
+  converterPath: convertFactory.converters.PDF
+});
 
 // Color dictionary
 const colors = {
@@ -65,15 +74,17 @@ async function data_getr(the_input) {
 
 }
 
+
+
 // III - We run the prompt then run the github API for the username provided
 promptr().then(function(the_input){
 	data_getr(the_input).then(function(the_input){
 		// console.log(data);
 		console.log(generateHTML(data));
+		converter(generateHTML(data));
 	});
 });
 
-// III.I - Format the location
 
 
 
@@ -158,7 +169,7 @@ function generateHTML(data) {
                      width: 95%;
                      border-radius: 6px;
                      }
-                     .photo-header img {
+                     .photo-header-img {
                      width: 250px;
                      height: 250px;
                      border-radius: 50%;
@@ -236,30 +247,32 @@ function generateHTML(data) {
                   </style>
                 </head>
                 <body>
-                    <div class="photo-header">
-                        <img src="${data.avatar_url}" alt="profile image">
-                        <h1>Hi!</h1>
-                        <h2>My name is ${data.name}!</h2>
-                        <h4>Currently @ ${data.company}</h4>
-                        <h5>
-                            <img src="https://image.flaticon.com/icons/svg/17/17736.svg" class="img-icon">
-                            <a href="https://www.google.com/maps/place/${data.location_}">
-                                ${data.location}
-                            </a> 
-                            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" class="img-icon">
-                            <a href="${data.html_url}">
-                                Github
-                            </a> 
-                            <img src="https://image.flaticon.com/icons/svg/56/56992.svg" class="img-icon">
-                            <a href="${data.blog}">
-                                Blog
-                            </a> 
-                        </h5>
-                    </div>
+	                <div class="container">
+	                    <div class="photo-header">
+	                        <img src="${data.avatar_url}" class="photo-header-img">
+	                        <h1>Hi!</h1>
+	                        <h2>My name is ${data.name}!</h2>
+	                        <h2>Currently @ ${data.company}</h2>
+	                        <h4>
+	                            <img src="https://image.flaticon.com/icons/svg/17/17736.svg" class="img-icon">
+	                            <a href="https://www.google.com/maps/place/${data.location_}">
+	                                ${data.location}
+	                            </a> 
+	                            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" class="img-icon">
+	                            <a href="${data.html_url}">
+	                                Github
+	                            </a> 
+	                            <img src="https://image.flaticon.com/icons/svg/56/56992.svg" class="img-icon">
+	                            <a href="${data.blog}">
+	                                Blog
+	                            </a> 
+	                        </h4>
+	                    </div>
+	                </div>
                     <div class="container">
-                        <div class="row">
-                            Oren World!
-                        </div>
+                            <div class="col">
+	                            <h1>${data.bio}</h1>
+                            <div>
                         <div class="row">
                             <div class="col">
                                 <div class="card">
@@ -308,3 +321,18 @@ function generateHTML(data) {
                 </body>
             </html>`
         }
+
+// V - Fuunction to convert html to PDF
+function converter(the_html){
+	conversion({ html: the_html }, function(err, result) {
+	  if (err) {
+	  	console.log(`assets/pdf/${user}.pdf`);
+	    return console.error(err);
+	  }
+	 
+	  console.log(result.numberOfPages);
+	  console.log(result.logs);
+	  result.stream.pipe(fs.createWriteStream(`assets/pdf/${user}.pdf`));
+	  conversion.kill(); // necessary if you use the electron-server strategy, see bellow for details
+	});
+}
