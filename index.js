@@ -174,7 +174,7 @@ function generateHTML(data) {
                      height: 250px;
                      border-radius: 50%;
                      object-fit: cover;
-                     margin-top: -75px;
+                     margin-top: -50px;
                      border: 6px solid ${colors[data.color].photoBorderColor};
                      box-shadow: rgba(0, 0, 0, 0.3) 4px 1px 20px 4px;
                      }
