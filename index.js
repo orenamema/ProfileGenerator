@@ -283,7 +283,7 @@ function generateHTML(data) {
                                        ${data.public_repos} 
                                     </h4>
                                 </div>
-                            <div>
+                            </div>
                             <div class="col">
                                 <div class="card">
                                     <h3>
@@ -293,7 +293,7 @@ function generateHTML(data) {
                                        ${data.followers} 
                                     </h4>
                                 </div>
-                            <div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col">
@@ -305,7 +305,7 @@ function generateHTML(data) {
                                        ${data.public_gists} 
                                     </h4>
                                 </div>
-                            <div>
+                            </div>
                             <div class="col">
                                 <div class="card">
                                     <h3>
@@ -315,7 +315,7 @@ function generateHTML(data) {
                                        ${data.following} 
                                     </h4>
                                 </div>
-                            <div>
+                            </div>
                         </div>                        
                     </div>
                 </body>
@@ -330,8 +330,9 @@ function converter(the_html){
 	    return console.error(err);
 	  }
 	 
-	  console.log(result.numberOfPages);
-	  console.log(result.logs);
+	  // console.log(result.numberOfPages);
+	  // console.log(result.logs);
+
 	  result.stream.pipe(fs.createWriteStream(`assets/pdf/${user}.pdf`));
 	  conversion.kill(); // necessary if you use the electron-server strategy, see bellow for details
 	});
